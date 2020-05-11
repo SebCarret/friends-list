@@ -1,23 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
+// pensez à importer les hooks d'état et d'effet !
+import React, {useState, useEffect} from 'react';
 import './App.css';
 
 function App() {
+
+  const [list, setList] = useState([]);
+
+  // utilisation du hook d'effet pour mettre à jour l'état list suite à la requête au webservices
+  useEffect(() => {
+    async function loadDatas(){
+      var response = await fetch('https://jsonplaceholder.typicode.com/users');
+      var responseJson = await response.json();
+      setList(responseJson)
+    }
+    loadDatas()
+  }, []);
+
+  // on map sur l'état list mis à jour pour afficher la liste des amis
+  var friendsList = list.map((friend, i) => {
+    return(<p key={i}>{friend.name}</p>)
+  });
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <h1>Ma liste d'amis :</h1>
+        {friendsList}
       </header>
     </div>
   );
